@@ -1,6 +1,36 @@
-from datetime import date
+from datetime import date, datetime, timedelta
 import numpy as np
 import streamlit as st
+
+from datetime import datetime, timedelta
+
+def biorhythm_high_res(birth_date, target_date):
+    # Calculate age in days
+    delta = (target_date - birth_date).days
+
+    # Calculate biorhythm phases with higher accuracy
+    physical = (delta % 23.5) / 23.5  # Updated cycle length
+    emotional = (delta % 28.8) / 28.8  # Updated cycle length
+    intellectual = (delta % 33.4) / 33.4  # Updated cycle length
+    
+    return physical, emotional, intellectual
+
+def biorhythm(birth_date, target_date):
+    # Calculate age in days
+    delta = (target_date - birth_date).days
+    
+    # Calculate biorhythm phases
+    physical = (delta % 23) / 23
+    emotional = (delta % 28) / 28
+    intellectual = (delta % 33) / 33
+    
+    return physical, emotional, intellectual
+
+def compatibility_score(physical, emotional, intellectual):
+    # Simple scoring system where 1 is strong compatibility
+    return (1 - abs(physical-0.5)) + (1 - abs(emotional-0.5)) + (1 - abs(intellectual-0.5))
+
+#print(f"Biorhythm Compatibility Score: {score}")
 
 def get_birth_sign(dt):
     # Zodiac sign date ranges (month, day): (start, end)
@@ -62,15 +92,17 @@ def find_perfect_compat_dates(birth_date, years=25, tol=0.01):
                     if other_date == birth_date:
                         pass
                     else:
-                        perfect_dates.add(other_date)
+                        physical, emotional, intellectual = biorhythm_high_res(birth_date, other_date)
+                        score = compatibility_score(physical, emotional, intellectual)
+                        perfect_dates.add((other_date, get_birth_sign(other_date), score))
             except ValueError:
                 continue  # skip invalid dates
 
     perfect_dates = list(perfect_dates)
     perfect_dates.sort()
     # Add birth sign to each date
-    perfect_dates_with_sign = [(dt, get_birth_sign(dt)) for dt in perfect_dates]
-    return perfect_dates_with_sign
+    #perfect_dates_with_sign = [(dt, get_birth_sign(dt)) for dt in perfect_dates]
+    return perfect_dates
 
 st.title('Perfect Compatibility Finder')
 
@@ -81,5 +113,11 @@ nyears = st.number_input('How many years difference to display:', min_value=4, v
 
 if st.button('Find Perfect Compatibility Dates'):
     birth_date = date(byear, bmonth, bday)
+    
     compat_dates = find_perfect_compat_dates(birth_date, years=nyears)
-    st.dataframe(data=compat_dates, column_config={1:'compatible dates',2:'birth sign (Western)'}, width='content', height='content')
+    st.dataframe(data=compat_dates, column_config={1:'Compatible Dates',2:'Birth Sign (Western)',3:'Compatibility Score'},\
+    height='content')
+st.write('Scores Between 0-1: Low compatibility. Difficulty connecting in various aspects.')
+st.write('Scores of 1-2: Moderate to strong compatibility. There might be some areas of connection but not ideal.')
+st.write('Scores Above 2: Excellent compatibility, indicating a high likelihood of productive relationships and connections.\
+ Significant synergy across all cycles.')
