@@ -103,19 +103,23 @@ def find_perfect_compat_dates(birth_date, years=25, tol=0.01):
     perfect_dates.sort(key=lambda x: x[2],reverse=True)
     return perfect_dates
 
+
 st.title('Perfect Compatibility Finder')
 
-byear = st.number_input('Enter your birth year:', min_value=1900, max_value=date.today().year, value=2000)
-bmonth = st.number_input('Enter your birth month:', min_value=1, max_value=12, value=1)
-bday = st.number_input('Enter your birth day:', min_value=1, max_value=31, value=1)
-nyears = st.number_input('How many years difference to display:', min_value=4, value=25)
+byear = st.number_input('Enter your birth year:', min_value=1900, max_value=date.today().year,\
+        value=2000, key='byear')
+bmonth = st.number_input('Enter your birth month:', min_value=1, max_value=12,\
+         value=1, key='bmonth')
+bday = st.number_input('Enter your birth day:', min_value=1, max_value=31,\
+       value=1, key='bday')
+nyears = st.number_input('How many years difference to display:', min_value=4,\
+         value=25, key='nyears')
 
 if st.button('Find Perfect Compatibility Dates'):
     birth_date = date(byear, bmonth, bday)
     compat_dates = find_perfect_compat_dates(birth_date, years=nyears)
     st.dataframe(data=compat_dates, column_config={1:'Compatible Dates',2:'Birth Sign',3:'Compatibility Score'},\
-    height='content')
-st.write('*dates are in YEAR-MONTH-DAY format')
+    height='stretch')
 st.write('Scores Between 0-1: Low compatibility. Difficulty connecting in various aspects.')
 st.write('Scores of 1-2: Moderate to strong compatibility. There might be some areas of connection but not ideal.')
 st.write('Scores Above 2: Excellent compatibility, indicating a high likelihood of productive relationships and connections.\
