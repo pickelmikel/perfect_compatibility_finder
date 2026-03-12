@@ -120,6 +120,7 @@ if st.button('Find Perfect Compatibility Dates'):
     compat_dates = find_perfect_compat_dates(birth_date, years=nyears)
     st.dataframe(data=compat_dates, column_config={1:'Compatible Dates',2:'Birth Sign',3:'Compatibility Score'},\
     height='content')
+st.write('*Dates are in YEAR-MONTH-DAY format')
 st.write('Scores Between 0-1: Low compatibility. Difficulty connecting in various aspects.')
 st.write('Scores of 1-2: Moderate to strong compatibility. There might be some areas of connection but not ideal.')
 st.write('Scores Above 2: Excellent compatibility, indicating a high likelihood of productive relationships and connections.\
