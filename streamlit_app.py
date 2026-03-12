@@ -99,9 +99,8 @@ def find_perfect_compat_dates(birth_date, years=25, tol=0.01):
                 continue  # skip invalid dates
 
     perfect_dates = list(perfect_dates)
-    perfect_dates.sort()
-    # Add birth sign to each date
-    #perfect_dates_with_sign = [(dt, get_birth_sign(dt)) for dt in perfect_dates]
+    # Sort by compatibility score (highest first)
+    perfect_dates.sort(key=lambda x: x[2],reverse=True)
     return perfect_dates
 
 st.title('Perfect Compatibility Finder')
@@ -113,7 +112,6 @@ nyears = st.number_input('How many years difference to display:', min_value=4, v
 
 if st.button('Find Perfect Compatibility Dates'):
     birth_date = date(byear, bmonth, bday)
-    
     compat_dates = find_perfect_compat_dates(birth_date, years=nyears)
     st.dataframe(data=compat_dates, column_config={1:'Compatible Dates',2:'Birth Sign (Western)',3:'Compatibility Score'},\
     height='content')
