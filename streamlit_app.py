@@ -59,6 +59,8 @@ def find_perfect_compat_dates(birth_date, years=25, tol=0.01):
                         all_perfect = False
                         break
                 if all_perfect:
+                    if other_date == birth_date:
+                        other_date = other_date + ' --your birthdate'
                     perfect_dates.add(other_date)
             except ValueError:
                 continue  # skip invalid dates
