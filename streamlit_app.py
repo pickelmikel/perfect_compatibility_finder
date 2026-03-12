@@ -78,6 +78,6 @@ bday = st.number_input('Enter your birth day:', min_value=1, max_value=31, value
 if st.button('Find Perfect Compatibility Dates'):
     birth_date = date(byear, bmonth, bday)
     compat_dates = find_perfect_compat_dates(birth_date)
-    st.dataframe(data=compat_dates, column_config={0:'compatible dates',1:'birth sign (Western)'})
+    st.dataframe(data=compat_dates, column_config={1:'compatible dates',2:'birth sign (Western)'})
     #for dt, sign in compat_dates:
     #    st.write(f"{dt}: {sign}")
