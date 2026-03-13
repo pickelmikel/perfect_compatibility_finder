@@ -131,7 +131,7 @@ nyears = st.number_input('How many years difference to display:', min_value=4,\
     #birth_date = date(byear, bmonth, bday)
 compat_dates = find_perfect_compat_dates(birth_date, years=nyears)
 columns = ['Compatible Dates','Birth Sign','Overall Compatability']
-df = pd.DataFrame(compat_dates, columns=columns, parse_dates=columns[0])
+df = pd.DataFrame(compat_dates, columns=columns)
 df[columns[2]] = df[columns[2]].apply(lambda x: round(x,2))
 df.reset_index(drop=True)
 st.table(data=df.set_index(columns[0]), border='horizontal')
