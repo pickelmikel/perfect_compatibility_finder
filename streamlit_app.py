@@ -90,7 +90,7 @@ def find_perfect_compat_dates(birth_date, years=25, tol=0.01):
                     if other_date == birth_date:
                         pass
                     else:
-                        physical, emotional, intellectual = biorhythm_high_res(birth_date, other_date)
+                        physical, emotional, intellectual = biorhythm(birth_date, other_date)
                         score = compatibility_score(physical, emotional, intellectual)
                         perfect_dates.add((other_date, get_birth_sign(other_date), score))
             except ValueError:
