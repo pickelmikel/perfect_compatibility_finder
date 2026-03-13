@@ -106,7 +106,7 @@ def find_perfect_compat_dates(birth_date, years=25, tol=0.01):
 
 st.title('Perfect Compatibility Finder')
 
-'''byear = st.number_input('Enter your birth year:', min_value=1900, max_value=date.today().year,\
+old_date_input = '''byear = st.number_input('Enter your birth year:', min_value=1900, max_value=date.today().year,\
         value=2000, key='byear')
 bmonth = st.number_input('Enter your birth month:', min_value=1, max_value=12,\
          value=1, key='bmonth')
