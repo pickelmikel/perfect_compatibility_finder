@@ -24,6 +24,17 @@ def biorhythm(birth_date, target_date):
     
     return physical, emotional, intellectual
 
+def bio_compat(your_birth, other_birth):
+    T = {'Physical':23, 'Emotional':28, 'Intellectual':33}
+    t = your_birth - other_birth
+    cycle_data = []
+    for cycle, value in T.items():
+        form = np.cos(np.pi * t.days / value)
+        cycle_data.append(abs(form))
+        form_final = form * 100
+        #print(f"Cycle {cycle}: Percent Compatibility {abs(form_final):.2f}")
+    return round(np.array(cycle_data).mean()*100,2)
+
 def compatibility_score(physical, emotional, intellectual):
     # Simple scoring system where 1 is strong compatibility
     return (1 - abs(physical-0.5)) + (1 - abs(emotional-0.5)) + (1 - abs(intellectual-0.5))
@@ -90,8 +101,8 @@ def find_perfect_compat_dates(birth_date, years=25, tol=0.01):
                     if other_date == birth_date:
                         pass
                     else:
-                        physical, emotional, intellectual = biorhythm(birth_date, other_date)
-                        score = compatibility_score(physical, emotional, intellectual)
+                        #physical, emotional, intellectual = biorhythm(birth_date, other_date)
+                        score =  bio_compat(birth_date,other_date)#compatibility_score(physical, emotional, intellectual)
                         perfect_dates.add((other_date, get_birth_sign(other_date), score))
             except ValueError:
                 continue  # skip invalid dates
