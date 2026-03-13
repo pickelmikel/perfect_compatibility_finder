@@ -112,7 +112,8 @@ bmonth = st.number_input('Enter your birth month:', min_value=1, max_value=12,\
          value=1, key='bmonth')
 bday = st.number_input('Enter your birth day:', min_value=1, max_value=31,\
        value=1, key='bday')'''
-birth_date = st.date_input('Select your birthdate', value=date(2000,1,1), min_value=date(1900,1,1), max_value=date.today(), key='birth_date')
+birth_date = st.date_input('Select your birthdate', value=date(2000,1,1), min_value=date(1900,1,1), max_value=date.today(),\
+             key='birth_date', format='YYYY-MM-DD')
 nyears = st.number_input('How many years difference to display:', min_value=4,\
          value=25, key='nyears')
 
