@@ -122,19 +122,27 @@ bmonth = st.number_input('Enter your birth month:', min_value=1, max_value=12,\
          value=1, key='bmonth')
 bday = st.number_input('Enter your birth day:', min_value=1, max_value=31,\
        value=1, key='bday')'''
-birth_date = st.date_input('Select your birthdate', value=date(2000,1,1), min_value=date(1900,1,1), max_value=date.today(),\
-             key='birth_date', format='YYYY-MM-DD')
-nyears = st.number_input('How many years difference to display:', min_value=4,\
-         value=25, key='nyears')
+birth_date = st.date_input('Select your birthdate',
+                           value=date(2000,1,1),
+                           min_value=date(1900,1,1),
+                           max_value=date.today(),
+                           key='birth_date',
+                           format='YYYY-MM-DD')
+nyears = st.number_input('How many years difference to display:',
+                         min_value=4,
+                         max_value=100,
+                         value=25,
+                         key='nyears')
 
 #if st.button('Find Perfect Compatibility Dates'):
     #birth_date = date(byear, bmonth, bday)
 compat_dates = find_perfect_compat_dates(birth_date, years=nyears)
 columns = ['Compatible Dates','Birth Sign','Overall Compatability']
 df = pd.DataFrame(compat_dates, columns=columns)
-df[columns[2]] = df[columns[2]].apply(lambda x: round(x,2))
+df[columns[2]] = df[columns[2]].round(2)#apply(lambda x: round(x,2))
 df.reset_index(drop=True)
-st.table(data=df.set_index(columns[0]))
+st.table(df.set_index(columns[0]).style.format({columns[2]: '{:.2f}'}))
+#st.dataframe(data=df.set_index(columns[0]),
              #column_config={1:'Compatible Dates',2:'Birth Sign',3:'Overall Compatability'},
              #height='content')
 
