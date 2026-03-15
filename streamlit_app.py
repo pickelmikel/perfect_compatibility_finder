@@ -172,8 +172,9 @@ try:
     st.bar_chart(b, sort=False,
                  stack=False,
                  x=None,
-                 y_label='Percent Compatible',
-                 x_label='Compatibility on Day of Birth',
+                 x=None,
+                 #y_label='Percent Compatible',
+                 x_label='Percent Compatibility on Day of Birth',
                  horizontal=True)
     st.table(b)
 except IndexError:
