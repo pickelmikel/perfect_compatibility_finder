@@ -7,7 +7,7 @@ import streamlit as st
 #fig = px.bar(df, x='Category', y='Value')
 #fig.update_xaxes(tickangle=0)  # 0 degrees = horizontal labels
 #st.plotly_chart(fig)
-disclaimer = "Disclaimer: Due to the early stage of development information provided may be inaccurate or change without notice. Currently finds dates with all cycles at least 80%."
+disclaimer = "Disclaimer: Due to the early stage of development, information provided may be inaccurate or change without notice. Currently finds dates with all cycles at least 80%."
 
 def biorhythm_high_res(birth_date, target_date):
     # Calculate age in days
@@ -212,7 +212,3 @@ except IndexError:
     pass
 
 st.write('*Dates are in YEAR-MONTH-DAY format')
-#st.write('Scores Between 0-1: Low compatibility. Difficulty connecting in various aspects.')
-#st.write('Scores of 1-2: Moderate to strong compatibility. There might be some areas of connection but not ideal.')
-#st.write('Scores Above 2: Excellent compatibility, indicating a high likelihood of productive relationships and connections.\
- #Significant synergy across all cycles.')
