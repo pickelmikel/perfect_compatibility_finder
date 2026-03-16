@@ -8,6 +8,7 @@ import streamlit as st
 #fig.update_xaxes(tickangle=0)  # 0 degrees = horizontal labels
 #st.plotly_chart(fig)
 
+disclaimer = "Disclaimer: Due to the early stage of development information provided may be inaccurate or change without notice."
 
 def biorhythm_high_res(birth_date, target_date):
     # Calculate age in days
@@ -125,7 +126,7 @@ def show_details():
         st.write(birth_date)
     except IndexError:
         pass
-
+st.info(disclamer)
 st.title('Perfect Compatibility Finder')
 # Playing with using a calendar to select birth_date
 old_date_input = '''byear = st.number_input('Enter your birth year:', min_value=1900, max_value=date.today().year,\
