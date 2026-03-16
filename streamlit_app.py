@@ -126,7 +126,7 @@ def show_details():
         st.write(birth_date)
     except IndexError:
         pass
-st.info(disclamer)
+st.info(disclaimer)
 st.title('Perfect Compatibility Finder')
 # Playing with using a calendar to select birth_date
 old_date_input = '''byear = st.number_input('Enter your birth year:', min_value=1900, max_value=date.today().year,\
