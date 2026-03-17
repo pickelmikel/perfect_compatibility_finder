@@ -178,8 +178,8 @@ nyears = st.number_input('How many years difference to display:',
 # Removed Button for now...
 #if st.button('Find Perfect Compatibility Dates'):
     #birth_date = date(byear, bmonth, bday)
-#st.divider()
 
+# DataFrame setup and display
 columns = ['Compatible Dates','Birth Sign','Physical' ,'Emotional', 'Intellectual' , 'Overall Compatibility']
 good_compat_dates = find_good_compat_dates(birth_date, years=nyears)
 gdf = pd.DataFrame(good_compat_dates, columns=columns)
@@ -187,8 +187,8 @@ gdf = gdf.astype({'Birth Sign':'category'})
 a_col_config = {
     'Physical':st.column_config.NumberColumn(format='percent'),
     'Emotional':st.column_config.NumberColumn(format='percent'),
-    'Intellectual':st.column_config.NumberColumn(format='percent'),
-    'Overall Compatibility':st.column_config.NumberColumn(format='percent')
+    'Intellectual':st.column_config.NumberColumn(format='percent')#,
+    #'Overall Compatibility':st.column_config.NumberColumn(format='percent')
     }
 a = st.dataframe(gdf,
              selection_mode='single-row',
@@ -197,7 +197,7 @@ a = st.dataframe(gdf,
 
 #st.table(df.set_index(columns[0]).style.format({columns[2]: '{:.2f}'}))
 
-# Bar chart config
+# Bar chart setup and display
 try:
     #st.write()
     b = bio_compat(birth_date, gdf.iloc[a.get('selection')['rows'][0]].iloc[0])[0]
