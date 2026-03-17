@@ -172,7 +172,7 @@ nyears = st.number_input('How many years difference to display:',
 
 #if st.button('Find Perfect Compatibility Dates'):
     #birth_date = date(byear, bmonth, bday)
-st.divider()
+#st.divider()
 
 columns = ['Compatible Dates','Birth Sign','Physical' ,'Emotional', 'Intellectual' , 'Overall Compatibility']
 columns_with_bars = ['Compatible Dates','Birth Sign','Physical|Emotional|Intellectual' , 'Overall Compatibility']
