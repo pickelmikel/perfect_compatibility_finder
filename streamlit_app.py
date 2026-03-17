@@ -202,7 +202,7 @@ try:
     #st.write()
     b = bio_compat(birth_date, gdf.iloc[a.get('selection')['rows'][0]].iloc[0])[0]
     bdf = pd.DataFrame([b],columns=['Physical', 'Emotional', 'Intellectual'])
-    b.index = ['Compatibility on Day of Birth']
+    bdf.index = ['Compatibility on Day of Birth']
     bdf = bdf.mul(100)
     st.table(bdf,b[-1])
     bdf.index = ['']
