@@ -221,9 +221,9 @@ try:
     bdf = bdf.mul(100)
     #bvals = np.array([x for x in b.values()])
     bdfd = bdf[:]
-    bdfd['Overall'] = bdfd.agg('mean')
+    bdfd['Overall'] = bdfd.mean()
     order = ['Overall','Physical', 'Emotional', 'Intellectual']
-    st.table(bdfd[[order]])
+    st.table(bdfd[order])
     
     bdf.index = ['']
     st.bar_chart(bdf, sort=False,
