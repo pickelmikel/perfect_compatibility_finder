@@ -130,9 +130,12 @@ def find_good_compat_dates(birth_date, years=4, threshold=0.8):
         try:
             other_date = date.fromordinal(other_ord)
             compat = [abs(np.cos(np.pi * delta / period)) for period in T.values()]
-            mean_compat = np.mean(compat)
-            if min(compat) >= threshold:
-                good_dates.append((other_date, get_birth_sign(other_date), *[round(x,5) for x in compat], round(mean_compat,3)))
+            # Derivatives for both people
+            dir1 = [-np.pi / period * np.sin(np.pi * delta / period) for period in T.values()]
+            dir2 = [-np.pi / period * np.sin(0) for period in T.values()]  # reference person at t=0
+            # Check value threshold and same direction
+            if min(compat) >= threshold and all(d1 * d2 >= 0 for d1, d2 in zip(dir1, dir2)):
+                good_dates.append((other_date, get_birth_sign(other_date), *[round(x,5) for x in compat], round(np.mean(compat),3)))
                 good_dates.sort(key=lambda x: x[-1], reverse=True)
         except ValueError:
             continue
@@ -175,10 +178,10 @@ nyears = st.number_input('How many years difference to display:',
 #st.divider()
 
 columns = ['Compatible Dates','Birth Sign','Physical' ,'Emotional', 'Intellectual' , 'Overall Compatibility']
-columns_with_bars = ['Compatible Dates','Birth Sign','Physical|Emotional|Intellectual' , 'Overall Compatibility']
+#columns_with_bars = ['Compatible Dates','Birth Sign','Physical|Emotional|Intellectual' , 'Overall Compatibility']
 good_compat_dates = find_good_compat_dates(birth_date, years=nyears)
 gdf = pd.DataFrame(good_compat_dates, columns=columns)
-
+gdf = gdf.astype({'Birth Sign':'category'})
 a_col_config = {
     'Physical':st.column_config.NumberColumn(format='percent'),
     'Emotional':st.column_config.NumberColumn(format='percent'),
