@@ -222,7 +222,7 @@ try:
     #bvals = np.array([x for x in b.values()])
     bdfd = bdf[:]
     bdfd['Overall'] = bdfd.mean(axis=1, numeric_only=True)
-    order = ['Overall','Physical', 'Emotional', 'Intellectual']
+    order = ['Overall', 'Emotional', 'Intellectual', 'Physical']
     
     st.table(bdfd[order])
     
