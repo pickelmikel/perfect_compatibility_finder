@@ -135,8 +135,12 @@ def find_good_compat_dates(birth_date, years=4, threshold=0.8):
             dir2 = [-np.pi / period * np.sin(0) for period in T.values()]  # reference person at t=0
             # Check value threshold and same direction
             if min(compat) >= threshold and all(d1 * d2 >= 0 for d1, d2 in zip(dir1, dir2)):
-                good_dates.append((other_date, get_birth_sign(other_date), *[round(x,5) for x in compat], np.mean(compat)))
-                good_dates.sort(key=lambda x: x[-1], reverse=True)
+                good_dates.append((other_date,
+                                   np.mean(compat) * 100, 
+                                   *compat,
+                                   get_birth_sign(other_date)
+                                   ))
+                good_dates.sort(key=lambda x: x[1], reverse=True)
         except ValueError:
             continue
     return good_dates
@@ -175,12 +179,20 @@ nyears = st.number_input('How many years difference to display:',
                          value=4,
                          key='nyears')
 
+
+
 # Removed Button for now...
 #if st.button('Find Perfect Compatibility Dates'):
     #birth_date = date(byear, bmonth, bday)
 
 # DataFrame setup and display
-columns = ['Compatible Dates','Birth Sign','Physical' ,'Emotional', 'Intellectual' , 'Overall Compatibility']
+columns = ['Compatible Dates',
+           'Overall Compatibility',
+           'Physical',
+           'Emotional',
+           'Intellectual',
+           'Birth Sign'
+           ]
 good_compat_dates = find_good_compat_dates(birth_date, years=nyears)
 gdf = pd.DataFrame(good_compat_dates, columns=columns)
 gdf = gdf.astype({'Birth Sign':'category'})
@@ -190,12 +202,15 @@ a_col_config = {
     'Intellectual':st.column_config.NumberColumn(format='percent')#,
     #'Overall Compatibility':st.column_config.NumberColumn(format='percent')
     }
+st.write(f'Found {gdf.shape[0]} matches')
 a = st.dataframe(gdf,
              selection_mode='single-row',
              column_config=a_col_config,
              on_select='rerun')
 
-#st.table(df.set_index(columns[0]).style.format({columns[2]: '{:.2f}'}))
+
+# Static Table
+#st.table(gdf.set_index(columns[0]).style.format({columns[2]: '{:.2f}'}))
 
 # Bar chart setup and display
 try:
@@ -204,7 +219,8 @@ try:
     bdf = pd.DataFrame([b],columns=['Physical', 'Emotional', 'Intellectual'])
     bdf.index = ['Compatibility on Day of Birth']
     bdf = bdf.mul(100)
-    #st.table(bdf,b[-1])
+    #st.write(b.values())
+    
     bdf.index = ['']
     st.bar_chart(bdf, sort=False,
                  stack=False,
