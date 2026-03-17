@@ -205,8 +205,8 @@ try:
     b.index = ['Compatibility on Day of Birth']
     bdf = bdf.mul(100)
     st.table(bdf,b[-1])
-    b.index = ['']
-    st.bar_chart(b, sort=False,
+    bdf.index = ['']
+    st.bar_chart(bdf, sort=False,
                  stack=False,
                  x=None,
                  y_label='Percent Compatible',
