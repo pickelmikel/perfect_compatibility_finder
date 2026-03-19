@@ -33,7 +33,7 @@ def day_compat(your_birth, other_birth, base_date=date.today()):
         val1 = np.sin(2 * np.pi * t1 / value)
         val2 = np.sin(2 * np.pi * t2 / value)
         phase_diff = (val1 - val2) / 2
-        compat = 1 - abs(val1 - val2)
+        compat = 1 - abs(val1 - val2) / 2
         st.write(f'{cycle} Cycle: phase_difference: {phase_diff:.3f}, compatiblity_score: {compat:.3f}')
 
 
