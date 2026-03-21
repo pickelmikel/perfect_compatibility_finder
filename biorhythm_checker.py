@@ -123,7 +123,7 @@ categories = ['Emotional', 'Intellectual', 'Physical', 'Overall']
 all_scores = []
 for d in dates:
     scores = day_compat(birth_date, other_date, d)[1]
-    values = [scores[cat] for cat in categories] + [scores['Emotional']]
+    values = [scores[cat] * 100 for cat in categories] + [scores['Emotional']*100]
     all_scores.append(values)
 
 # Initial values for the current base_date
@@ -181,7 +181,7 @@ fig = go.Figure(
 
 
 fig.update_layout(
-    polar=dict(radialaxis=dict(visible=True, range=[0, 1])),
+    polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
     updatemenus=[dict(
         type="buttons",
         showactive=False,
