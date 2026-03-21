@@ -60,7 +60,8 @@ def bio_compat(your_birth, other_birth):
         cycle_data[cycle] = abs(form)
         form_final = form * 100
         #print(f"Cycle {cycle}: Percent Compatibility {abs(form_final):.2f}")
-    return cycle_data, np.array([*cycle_data.values()]).mean() * 100
+    cycle_data['Overall'] = np.array([*cycle_data.values()]).mean()
+    return cycle_data
 
 def compatibility_score(physical, emotional, intellectual):
     # Simple scoring system where 1 is strong compatibility
@@ -307,8 +308,8 @@ a = st.dataframe(gdf[good_order],
 try:
     #st.write()
     other_date = gdf.iloc[a.get('selection')['rows'][0]].iloc[0]
-    b = bio_compat(birth_date, other_date)[0]
-    bdf = pd.DataFrame([b],columns=['Physical', 'Emotional', 'Intellectual'])
+    b = bio_compat(birth_date, other_date)
+    bdf = pd.DataFrame([b],columns=['Physical','Emotional','Intellectual','Overall'])
     # Setting index to display on static table of selected match
     #bdf.index = ['Compatibility on Day of Birth']
     bdf.index = [other_date]
@@ -328,7 +329,9 @@ try:
                  x=None,
                  y_label='Percent Compatible',
                  x_label='Compatibility on Day of Birth',
-                 horizontal=True)
+                 horizontal=False,
+                 color=['blue','green','red', 'violet'],
+                 height='content')
     #st.table(b)
 except IndexError:
     pass
