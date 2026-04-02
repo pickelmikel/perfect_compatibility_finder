@@ -10,9 +10,9 @@ def check_state():
     if 'Eval' not in st.session_state:
         st.session_state.Eval = 0.8
     if 'Ival' not in st.session_state:
-        st.session_state.Eval = 0.8
+        st.session_state.Ival = 0.8
     if 'Pval' not in st.session_state:
-        st.session_state.Eval = 0.8
+        st.session_state.Pval = 0.8
 
 # Init session_state variables 
 check_state()
@@ -95,6 +95,7 @@ def get_birth_sign(dt):
     return "Capricorn"  # fallback
 
 def find_perfect_compat_dates(birth_date, years=25, tol=0.01):
+    # using find_good_compat_dates instead #
     """
     Returns all birthdates within +/- `years` from `birth_date` that are at least 99% compatible
     for all cycles in Bio.T (Physical, Emotional, Intellectual).
