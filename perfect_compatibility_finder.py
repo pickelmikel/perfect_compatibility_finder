@@ -2,7 +2,7 @@ from datetime import date, datetime, timedelta
 import numpy as np
 import pandas as pd
 import streamlit as st
-
+import plotly.express as px
 
 def check_state():
     if 'advanced' not in st.session_state:
@@ -321,18 +321,34 @@ try:
     bdfd = bdf.copy()
     bdfd['Overall'] = bdfd.mean(axis=1, numeric_only=True)
     order = ['Emotional', 'Intellectual', 'Physical', 'Overall']
-    
+    cycle_colors = ['blue','green','red', 'violet']
+    order_colors = dict(zip(order, cycle_colors))
+    #st.write(order_colors)
     st.table(bdfd[order])
     # Blanking index because it shows funny on the screen
     bdf.index = ['']
-    st.bar_chart(bdf, sort=False,
+    
+    bdf_melt = bdf[order].melt(var_name='Compatibility on Day of Birth', value_name='Percent Compatible')
+    fig = px.bar(bdf_melt,
+                 x='Compatibility on Day of Birth',
+                 y='Percent Compatible',
+                 color='Compatibility on Day of Birth',
+                 color_discrete_map=order_colors,
+                 hover_data='Percent Compatible'
+    )
+    fig.update_yaxes(range=[0,100])
+    fig.update_layout(showlegend=False)
+    st.plotly_chart(fig, use_container_width=True)
+    
+    
+    bc = """st.bar_chart(bdf[order], sort=False,
                  stack=False,
                  x=None,
                  y_label='Percent Compatible',
                  x_label='Compatibility on Day of Birth',
                  horizontal=False,
                  color=['blue','green','red', 'violet'],
-                 height='content')
+                 height='content')"""
     #st.table(b)
 except IndexError:
     pass
