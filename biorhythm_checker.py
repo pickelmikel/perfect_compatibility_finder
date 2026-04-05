@@ -82,9 +82,9 @@ try:
     st.write('Compatibility at Birth')
     bio_compat_result = bio_compat(birth_date,other_date)
     st.markdown(
-            f":blue-badge[Emotional {bio_compat_result.get('Emotional')*100}%]\
-            :green-badge[Intellectual {bio_compat_result.get('Intellectual')*100}%]\
-            :red-badge[Physical {bio_compat_result.get('Physical')*100}%]",
+            f":blue-badge[Emotional {round(bio_compat_result.get('Emotional')*100,2)}%]\
+            :green-badge[Intellectual {round(bio_compat_result.get('Intellectual')*100,2)}%]\
+            :red-badge[Physical {round(bio_compat_result.get('Physical')*100,2)}%]",
             unsafe_allow_html=True
         )
 
@@ -106,9 +106,9 @@ try:
               key='base_date')
         phase_dict, compat_dict = day_compat(birth_date,other_date,base_date)
         st.markdown(
-            f":blue-badge[Emotional {compat_dict.get('Emotional')*100}%]\
-            :green-badge[Intellectual {compat_dict.get('Intellectual')*100}%]\
-            :red-badge[Physical {compat_dict.get('Physical')*100}%]",
+            f":blue-badge[Emotional {round(compat_dict.get('Emotional')*100,2)}%]\
+            :green-badge[Intellectual {round(compat_dict.get('Intellectual')*100,2)}%]\
+            :red-badge[Physical {round(compat_dict.get('Physical')*100,2)}%]",
             unsafe_allow_html=True
         )
             #st.write(f'{cycle} Cycle:  {value*100:.2f} %')
