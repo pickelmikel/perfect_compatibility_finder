@@ -354,7 +354,7 @@ try:
                  color=['blue','green','red', 'violet'],
                  height='content')"""
     #st.table(b)
-except IndexError:
+except (IndexError, NameError):
     pass
 
 st.write('*Dates are in YEAR-MONTH-DAY format')
