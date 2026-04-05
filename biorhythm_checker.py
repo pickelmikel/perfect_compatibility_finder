@@ -60,33 +60,35 @@ def update_base_slider():
 st.info(st.session_state.disclaimer)
 st.title('Biorhythm Compatibility Checker')
 
-# Birthday selection for two individuals
-birth_date = st.date_input('Select your birthdate',
-                           #value=date(2000,1,1),
-                           min_value=date(1900,1,1),
-                           max_value=date.today(),
-                           key='your_birhdate',
-                           format='YYYY-MM-DD')
-other_date = st.date_input('Select other birthdate',
-                           #value=date(2000,1,1),
-                           min_value=date(1900,1,1),
-                           max_value=date.today(),
-                           key='other_birthdate',
-                           format='YYYY-MM-DD')
+try:
+    # Birthday selection for two individuals
+    birth_date = st.date_input('Select your birthdate',
+                               #value=date(2000,1,1),
+                               min_value=date(1900,1,1),
+                               max_value=date.today(),
+                               key='your_birhdate',
+                               format='YYYY-MM-DD')
+    other_date = st.date_input('Select other birthdate',
+                               #value=date(2000,1,1),
+                               min_value=date(1900,1,1),
+                               max_value=date.today(),
+                               key='other_birthdate',
+                               format='YYYY-MM-DD')
 
-# Sets lower date limit to earlier date
-limit_date = set_limit_date(birth_date,other_date)#may be removed
+    # Sets lower date limit to earlier date
+    limit_date = set_limit_date(birth_date,other_date)#may be removed
 
-# Shows your overall average compatibility for each cycle
-st.write('Compatibility at Birth')
-bio_compat_result = bio_compat(birth_date,other_date)
-st.markdown(
-        f":blue-badge[Emotional {bio_compat_result.get('Emotional')*100}%]\
-        :green-badge[Intellectual {bio_compat_result.get('Intellectual')*100}%]\
-        :red-badge[Physical {bio_compat_result.get('Physical')*100}%]",
-        unsafe_allow_html=True
-    )
-
+    # Shows your overall average compatibility for each cycle
+    st.write('Compatibility at Birth')
+    bio_compat_result = bio_compat(birth_date,other_date)
+    st.markdown(
+            f":blue-badge[Emotional {bio_compat_result.get('Emotional')*100}%]\
+            :green-badge[Intellectual {bio_compat_result.get('Intellectual')*100}%]\
+            :red-badge[Physical {bio_compat_result.get('Physical')*100}%]",
+            unsafe_allow_html=True
+        )
+except TypeError:
+    pass
 
 st.divider()
 
