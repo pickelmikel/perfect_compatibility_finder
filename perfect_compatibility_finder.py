@@ -342,7 +342,7 @@ try:
     )
     fig.update_yaxes(range=[0,100])
     fig.update_layout(showlegend=False)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width='stretch')
     
     
     bc = """st.bar_chart(bdf[order], sort=False,
