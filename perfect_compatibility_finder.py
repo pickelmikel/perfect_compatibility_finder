@@ -283,8 +283,7 @@ try:
         birth_date,
         years=nyears,
         thresholds=st.session_state.advanced_values)
-except:
-    AttributeError:
+except AttributeError:
         pass
 
 gdf = pd.DataFrame(good_compat_dates, columns=columns)
