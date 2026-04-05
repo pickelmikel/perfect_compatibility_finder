@@ -283,29 +283,28 @@ try:
         birth_date,
         years=nyears,
         thresholds=st.session_state.advanced_values)
+
+    gdf = pd.DataFrame(good_compat_dates, columns=columns)
+    gdf = gdf.astype({'Birth Sign':'category'})
+    a_col_config = {
+        'Physical':st.column_config.NumberColumn(format='percent'),
+        'Emotional':st.column_config.NumberColumn(format='percent'),
+        'Intellectual':st.column_config.NumberColumn(format='percent')#,
+        #'Overall Compatibility':st.column_config.NumberColumn(format='percent')
+        }
+
+
+
+    # Write total number of matches from current dataframe
+    st.write(f'Found {gdf.shape[0]} matches')
+
+    ## DataFrame display ##
+    a = st.dataframe(gdf[good_order],
+                 selection_mode='single-row',
+                 column_config=a_col_config,
+                 on_select='rerun')
 except (NameError,AttributeError):
-        pass
-
-gdf = pd.DataFrame(good_compat_dates, columns=columns)
-gdf = gdf.astype({'Birth Sign':'category'})
-a_col_config = {
-    'Physical':st.column_config.NumberColumn(format='percent'),
-    'Emotional':st.column_config.NumberColumn(format='percent'),
-    'Intellectual':st.column_config.NumberColumn(format='percent')#,
-    #'Overall Compatibility':st.column_config.NumberColumn(format='percent')
-    }
-
-
-
-# Write total number of matches from current dataframe
-st.write(f'Found {gdf.shape[0]} matches')
-
-## DataFrame display ##
-a = st.dataframe(gdf[good_order],
-             selection_mode='single-row',
-             column_config=a_col_config,
-             on_select='rerun')
-
+    pass
 
 # Static Table
 #st.table(gdf.set_index(columns[0]).style.format({columns[2]: '{:.2f}'}))
