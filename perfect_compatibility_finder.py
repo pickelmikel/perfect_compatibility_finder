@@ -1,3 +1,6 @@
+# TODO
+# save current birthdate and selected birthdate for use in bio compt checker
+
 from datetime import date, datetime, timedelta
 import numpy as np
 import pandas as pd
@@ -275,11 +278,14 @@ good_order = ['Compatible Dates',
            'Physical',
            'Birth Sign'
            ]
-# Checks if advanced options expander is open or closed
-good_compat_dates = find_good_compat_dates(
+try:
+    good_compat_dates = find_good_compat_dates(
         birth_date,
         years=nyears,
         thresholds=st.session_state.advanced_values)
+except:
+    AttributeError:
+        pass
 
 gdf = pd.DataFrame(good_compat_dates, columns=columns)
 gdf = gdf.astype({'Birth Sign':'category'})
