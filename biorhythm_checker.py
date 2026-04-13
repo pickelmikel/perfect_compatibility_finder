@@ -13,7 +13,10 @@ def check_state():
         #st.session_state.base_date = date.today()
     #if "birth_date" not in st.session_state:
     #   st.session_state.birth_date = date.today() 
-
+    if 'bd' not in st.session_state:
+        st.session_state.bd = date.today()
+    if 'ob' not in st.session_state:
+        st.session_state.ob = date.today()
 check_state()
 #st.write(st.session_state.your_birthdate)
 @st.cache_data
@@ -221,7 +224,7 @@ chart_max_value=date.today() + timedelta(days=90)
 #st.session_state.bio_check_date = st.expander(label='Expand to see \
 #compatibility for a specific date', expanded=False, on_change='rerun')
 #with st.session_state.bio_check_date:
-st.date_input('Compatibility Date',
+st.date_input('Compatibility on Date',
           #min_value=chart_min_value,
           #max_value=chart_max_value,
           format='YYYY-MM-DD',
