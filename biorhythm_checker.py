@@ -9,8 +9,8 @@ def check_state():
                               'Intellectual':33,
                               'Physical':23}
     
-    #if 'base_date' not in st.session_state:
-        #st.session_state.base_date = date.today()
+    if 'base' not in st.session_state:
+        st.session_state.base = date.today()
     #if "birth_date" not in st.session_state:
     #   st.session_state.birth_date = date.today() 
     if 'bd' not in st.session_state:
@@ -62,7 +62,8 @@ def set_limit_date(birth_date,other_date):
 
 def update_radar():
     fig, key = radar_display(st.session_state.base_date)
-    st.plotly_chart(fig, width='stretch', key=key)
+    return fig, key
+    #st.plotly_chart(fig, width='stretch', key=key)
 
 def update_base_slider():
     pass
@@ -213,7 +214,6 @@ st.markdown(
         unsafe_allow_html=True
     )
 
-
 st.divider()
 
 # Sets max and min values for chart display
@@ -225,11 +225,13 @@ chart_max_value=date.today() + timedelta(days=90)
 #compatibility for a specific date', expanded=False, on_change='rerun')
 #with st.session_state.bio_check_date:
 st.date_input('Compatibility on Date',
+          value=st.session_state.base,
           #min_value=chart_min_value,
           #max_value=chart_max_value,
           format='YYYY-MM-DD',
           on_change=update_radar,
           key='base_date')
+st.session_state.base = st.session_state.base_date
 phase_dict, compat_dict = day_compat(st.session_state.your_birthdate,
                                         st.session_state.other_birthdate,
                                         st.session_state.base_date)
@@ -249,7 +251,8 @@ st.button(label='Reset to Today',
     
     #st.write(f'{cycle} Cycle:  {value*100:.2f} %')
     #st.write(f'{cycle} Cycle: phase_difference: {phase_diff:.3f}, compatiblity_score: {compat:.3f}')
-update_radar()
+fig, key = update_radar()
+st.plotly_chart(fig, width='stretch', key=key)
     
   
 
