@@ -16,7 +16,10 @@ def check_state():
         st.session_state.Ival = 0.8
     if 'Pval' not in st.session_state:
         st.session_state.Pval = 0.8
-
+    #if "your_birthdate" not in st.session_state:
+    #    st.session_state.your_birthdate = date.today()
+    if "bd" not in st.session_state:
+        st.session_state.bd = date.today() 
 # Init session_state variables 
 check_state()
 
@@ -215,14 +218,14 @@ st.info(st.session_state.disclaimer)
 st.title('Perfect Compatibility Finder')
 
 ## User Input widgets ##
-birth_date = st.date_input('Select your birthdate',
-                           #value=date(2000,1,1),
+st.date_input('Select your birthdate',
+                           value=st.session_state.bd,
                            min_value=date(1900,1,1),
                            max_value=date.today(),
                            key='birth_date',
                            format='YYYY-MM-DD')
-
-nyears = st.number_input('How many years difference to display:',
+st.session_state.bd = st.session_state.birth_date
+st.number_input('How many years difference to display:',
                          min_value=1,
                          max_value=100,
                          value=4,
@@ -256,7 +259,7 @@ with st.expander('Advanced Options', on_change=set_advanced) as advanced_options
     
 st.session_state.advanced_values = {'Emotional':E,
                                     'Intellectual':I,
-                                    'Physical':P}
+                                    'Pompatibility Finderhysical':P}
  
 # Testing displaying advanced state and values
 #advanced_options.open
@@ -280,8 +283,8 @@ good_order = ['Compatible Dates',
            ]
 try:
     good_compat_dates = find_good_compat_dates(
-        birth_date,
-        years=nyears,
+        st.session_state.birth_date,
+        years=st.session_state.nyears,
         thresholds=st.session_state.advanced_values)
 
     gdf = pd.DataFrame(good_compat_dates, columns=columns)
@@ -303,6 +306,7 @@ try:
                  selection_mode='single-row',
                  column_config=a_col_config,
                  on_select='rerun')
+    #st.write(a)
 except (NameError,AttributeError):
     pass
 
@@ -311,13 +315,14 @@ except (NameError,AttributeError):
 
 ## Bar chart setup and display ##
 try:
-    #st.write()
-    other_date = gdf.iloc[a.get('selection')['rows'][0]].iloc[0]
-    b = bio_compat(birth_date, other_date)
+    st.session_state.other_birthdate = gdf.iloc[a.get('selection')['rows'][0]].iloc[0]
+    st.session_state.ob = gdf.iloc[a.get('selection')['rows'][0]].iloc[0]
+    b = bio_compat(st.session_state.birth_date,
+                   st.session_state.other_birthdate)
     bdf = pd.DataFrame([b],columns=['Physical','Emotional','Intellectual','Overall'])
     # Setting index to display on static table of selected match
     #bdf.index = ['Compatibility on Day of Birth']
-    bdf.index = [other_date]
+    bdf.index = [st.session_state.other_birthdate]
     bdf.index.name = 'Result Date'
     # To get percentage
     bdf = bdf.mul(100)
@@ -358,3 +363,4 @@ except (IndexError, NameError):
     pass
 
 st.write('*Dates are in YEAR-MONTH-DAY format')
+#st.write(    "🔎 session_state:",    {k: str(v) for k, v in st.session_state.items()})

@@ -8,8 +8,14 @@ def check_state():
         st.session_state.T = {'Emotional':28,
                               'Intellectual':33,
                               'Physical':23}
-check_state()
+    
+    #if 'base_date' not in st.session_state:
+        #st.session_state.base_date = date.today()
+    #if "birth_date" not in st.session_state:
+    #   st.session_state.birth_date = date.today() 
 
+check_state()
+#st.write(st.session_state.your_birthdate)
 @st.cache_data
 def bio_compat(your_birth, other_birth):
     T = st.session_state.T
@@ -24,7 +30,7 @@ def bio_compat(your_birth, other_birth):
     return cycle_data
 
 @st.cache_data
-def day_compat(your_birth, other_birth, base_date=date.today()):
+def day_compat(your_birth, other_birth, base_date):
     T = st.session_state.T
     t1 = (base_date - your_birth).days
     t2 = (base_date - other_birth).days
@@ -51,94 +57,44 @@ def set_limit_date(birth_date,other_date):
         limit_date = date(1900,1,1)
     return limit_date
 
-def update_base_date():
-    pass
+def update_radar():
+    fig, key = radar_display(st.session_state.base_date)
+    st.plotly_chart(fig, width='stretch', key=key)
+
 def update_base_slider():
     pass
 
-## -- MAIN DISPLAY CODE -- ##
-st.info(st.session_state.disclaimer)
-st.title('Biorhythm Compatibility Checker')
+def reset_to_today():
+    st.session_state.base_date = date.today()
 
-try:
-    # Birthday selection for two individuals
-    birth_date = st.date_input('Select your birthdate',
-                               #value=date(2000,1,1),
-                               min_value=date(1900,1,1),
-                               max_value=date.today(),
-                               key='your_birhdate',
-                               format='YYYY-MM-DD')
-    other_date = st.date_input('Select other birthdate',
-                               #value=date(2000,1,1),
-                               min_value=date(1900,1,1),
-                               max_value=date.today(),
-                               key='other_birthdate',
-                               format='YYYY-MM-DD')
-
-    # Sets lower date limit to earlier date
-    limit_date = set_limit_date(birth_date,other_date)#may be removed
-
-    # Shows your overall average compatibility for each cycle
-    st.write('Compatibility at Birth')
-    bio_compat_result = bio_compat(birth_date,other_date)
-    st.markdown(
-            f":blue-badge[Emotional {round(bio_compat_result.get('Emotional')*100,2)}%]\
-            :green-badge[Intellectual {round(bio_compat_result.get('Intellectual')*100,2)}%]\
-            :red-badge[Physical {round(bio_compat_result.get('Physical')*100,2)}%]",
-            unsafe_allow_html=True
-        )
-
-
-    st.divider()
-
-    # Sets max and min values for chart display
-    chart_min_value=date.today() - timedelta(days=90)
-    chart_max_value=date.today() + timedelta(days=90)
-
-    # Check specific date compatibility
-    with st.expander(label='Expand to see \
-    compatibility for a specific date', expanded=False) as bio_check_date:
-        #st.write('')
-        base_date = st.date_input('Compatibility Date',
-              min_value=chart_min_value,
-              max_value=chart_max_value,
-              format='YYYY-MM-DD',
-              key='base_date')
-        phase_dict, compat_dict = day_compat(birth_date,other_date,base_date)
-        st.markdown(
-            f":blue-badge[Emotional {round(compat_dict.get('Emotional')*100,2)}%]\
-            :green-badge[Intellectual {round(compat_dict.get('Intellectual')*100,2)}%]\
-            :red-badge[Physical {round(compat_dict.get('Physical')*100,2)}%]",
-            unsafe_allow_html=True
-        )
-            #st.write(f'{cycle} Cycle:  {value*100:.2f} %')
-            #st.write(f'{cycle} Cycle: phase_difference: {phase_diff:.3f}, compatiblity_score: {compat:.3f}')
-
+def radar_display(start_date):
     ## Chart Config ##
     #st.write(compat_dict)#test display
 
     # Generate a list of dates for the slider and animation
-    start_date = date.today()
     num_days = 91
     before_dates = [start_date - timedelta(days=i) for i in range(num_days)]
     after_dates = [start_date + timedelta(days=i) for i in range(num_days+1)]  # include today
     before_dates.reverse()
     dates = before_dates + after_dates  # chronological order
-
     categories = ['Emotional', 'Intellectual', 'Physical', 'Overall']
 
     # Precompute all scores for all dates for efficiency
     all_scores = []
     for d in dates:
-        scores = day_compat(birth_date, other_date, d)[1]
+        scores = day_compat(st.session_state.your_birthdate,
+                            st.session_state.other_birthdate, d)[1]
         values = [scores[cat] * 100 for cat in categories] + [scores['Emotional']*100]
         all_scores.append(values)
 
     # Initial values for the current base_date
-    if base_date in dates:
-        init_idx = dates.index(base_date)
-    else:
-        init_idx = len(dates)//2  # fallback to today
+    if start_date in dates:
+        init_idx = dates.index(start_date)
+    
+    #if st.session_state.base_date in dates:
+    #    init_idx = dates.index(st.session_state.base_date)
+    #else:st.write("🔎 AFTER widget :", dict(st.session_state)) 
+    #    init_idx = len(dates)//2  # fallback to today
 
     init_values = all_scores[init_idx]
 
@@ -165,7 +121,7 @@ try:
         steps.append(step)
 
     # Set the initial slider position to today's date (middle of the range)
-    today_str = str(date.today())
+    today_str = str(start_date)
     if today_str in [str(d) for d in dates]:
         slider_init_idx = [str(d) for d in dates].index(today_str)
     else:
@@ -206,11 +162,92 @@ try:
             currentvalue=dict(prefix="Date: ", visible=True, xanchor='right'),
             active=slider_init_idx  # This sets the initial slider position to today
         )],
-        title=f'Biorhythm Compatibility Radar for Previous and Future 90 days',
+        title=f'Biorhythm Compatibility Radar for Previous and Future 90 days from {start_date}',
         template='plotly_dark'
     )
     #st.write(all_scores)
+    key = np.random.rand()    
+    return fig, key
+    
+    
 
-    st.plotly_chart(fig, width='stretch')
-except TypeError:
-    pass
+## -- MAIN DISPLAY CODE -- ##
+st.info(st.session_state.disclaimer)
+st.title('Biorhythm Compatibility Checker')
+
+
+# Birthday selection for two individuals
+#st.write("🔎 BEFORE widget:", dict(st.session_state))
+st.date_input('Select your birthdate',
+                           value=st.session_state.bd,
+                           min_value=date(1900,1,1),
+                           max_value=date.today(),
+                           key='your_birthdate',
+                           format='YYYY-MM-DD')
+#st.write("🔎 AFTER widget :", dict(st.session_state)) 
+st.date_input('Select other birthdate',
+                           value=st.session_state.ob,
+                           min_value=date(1900,1,1),
+                           max_value=date.today(),
+                           key='other_birthdate',
+                           format='YYYY-MM-DD')
+st.session_state.ob = st.session_state.other_birthdate
+# Sets lower date limit to earlier date
+#limit_date = set_limit_date(st.session_state.your_birthdate,
+                            #st.session_state.other_birthdate)#may be removed
+
+# Shows your overall average compatibility for each cycle
+st.write('Compatibility at Birth')
+bio_compat_result = bio_compat(st.session_state.your_birthdate,
+                               st.session_state.other_birthdate)
+#radar_display(False,None)
+
+st.markdown(
+        f":blue-badge[Emotional {round(bio_compat_result.get('Emotional')*100,2)}%]\
+        :green-badge[Intellectual {round(bio_compat_result.get('Intellectual')*100,2)}%]\
+        :red-badge[Physical {round(bio_compat_result.get('Physical')*100,2)}%]\
+        :yellow-badge[Overall {round(bio_compat_result.get('Overall'),2)}%]",
+        unsafe_allow_html=True
+    )
+
+
+st.divider()
+
+# Sets max and min values for chart display
+chart_min_value=date.today() - timedelta(days=190)
+chart_max_value=date.today() + timedelta(days=90)
+
+# Check specific date compatibility
+#st.session_state.bio_check_date = st.expander(label='Expand to see \
+#compatibility for a specific date', expanded=False, on_change='rerun')
+#with st.session_state.bio_check_date:
+st.date_input('Compatibility Date',
+          #min_value=chart_min_value,
+          #max_value=chart_max_value,
+          format='YYYY-MM-DD',
+          on_change=update_radar,
+          key='base_date')
+phase_dict, compat_dict = day_compat(st.session_state.your_birthdate,
+                                        st.session_state.other_birthdate,
+                                        st.session_state.base_date)
+
+st.markdown(
+        f":blue-badge[Emotional {round(compat_dict.get('Emotional')*100,2)}%]\
+        :green-badge[Intellectual {round(compat_dict.get('Intellectual')*100,2)}%]\
+        :red-badge[Physical {round(compat_dict.get('Physical')*100,2)}%]\
+        :yellow-badge[Overall {round(compat_dict.get('Overall')*100,2)}%]",
+        unsafe_allow_html=True
+    )
+
+st.button(label='Reset to Today',
+          key='reset_to_today',
+          on_click=reset_to_today
+          )
+    
+    #st.write(f'{cycle} Cycle:  {value*100:.2f} %')
+    #st.write(f'{cycle} Cycle: phase_difference: {phase_diff:.3f}, compatiblity_score: {compat:.3f}')
+update_radar()
+    
+  
+
+#st.write(    "🔎 session_state:",    {k: str(v) for k, v in st.session_state.items()})
