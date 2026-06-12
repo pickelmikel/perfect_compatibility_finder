@@ -259,7 +259,7 @@ with st.expander('Advanced Options', on_change=set_advanced) as advanced_options
     
 st.session_state.advanced_values = {'Emotional':E,
                                     'Intellectual':I,
-                                    'Pompatibility Finderhysical':P}
+                                    'Physical':P}
  
 # Testing displaying advanced state and values
 #advanced_options.open
