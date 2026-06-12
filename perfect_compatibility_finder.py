@@ -274,7 +274,7 @@ columns = ['Compatible Dates',
            'Intellectual',
            'Birth Sign'
            ]
-good_order = ['Compatible Dates*',
+good_order = ['Compatible Dates',
            'Overall Compatibility',
            'Emotional',
            'Intellectual',
