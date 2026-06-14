@@ -72,8 +72,12 @@ def bio_compat(your_birth, other_birth):
 def compatibility_score(physical, emotional, intellectual):
     # Simple scoring system where 1 is strong compatibility
     return (1 - abs(physical-0.5)) + (1 - abs(emotional-0.5)) + (1 - abs(intellectual-0.5))
+    #print(f"Biorhythm Compatibility Score: {score}")
 
-#print(f"Biorhythm Compatibility Score: {score}")
+def calculate_age(birthdate):
+    today = date.today()
+    age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+    return age
 
 def get_birth_sign(dt):
     # Zodiac sign date ranges (month, day): (start, end)
@@ -153,6 +157,7 @@ def find_good_compat_dates(birth_date, years=4, threshold=0.8, thresholds=None):
     years:         int 
     threshold:     float
     thresholds:    dict()
+    returns (date(), np.float, np.float, np.float, np.float, str, int)
     """
     
     T = {'Physical': 23, 'Emotional': 28, 'Intellectual': 33}
@@ -197,7 +202,8 @@ def find_good_compat_dates(birth_date, years=4, threshold=0.8, thresholds=None):
                     other_date,
                     np.mean(compat) * 100,
                     *compat,
-                    get_birth_sign(other_date)
+                    get_birth_sign(other_date),
+                    calculate_age(other_date)
                 ))
                 good_dates.sort(key=lambda x: x[1], reverse=True)
         except ValueError:
@@ -272,14 +278,16 @@ columns = ['Compatible Dates',
            'Physical',
            'Emotional',
            'Intellectual',
-           'Birth Sign'
+           'Birth Sign',
+           'Age'
            ]
 good_order = ['Compatible Dates',
            'Overall Compatibility',
            'Emotional',
            'Intellectual',
            'Physical',
-           'Birth Sign'
+           'Birth Sign',
+           'Age'
            ]
 try:
     good_compat_dates = find_good_compat_dates(
@@ -289,6 +297,8 @@ try:
 
     gdf = pd.DataFrame(good_compat_dates, columns=columns)
     gdf = gdf.astype({'Birth Sign':'category'})
+
+    # Config columns to show percentages, but not for overall
     a_col_config = {
         'Physical':st.column_config.NumberColumn(format='percent'),
         'Emotional':st.column_config.NumberColumn(format='percent'),
