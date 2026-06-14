@@ -19,7 +19,10 @@ def check_state():
     #if "your_birthdate" not in st.session_state:
     #    st.session_state.your_birthdate = date.today()
     if "bd" not in st.session_state:
-        st.session_state.bd = date.today() 
+        st.session_state.bd = date(2000,1,1)
+    if "ny" not in st.session_state:
+        st.session_state.ny = 4
+
 # Init session_state variables 
 check_state()
 
@@ -219,23 +222,34 @@ def show_details():
         pass
 
 
-## -- MAIN DISPLAY CODE -- ##
-st.info(st.session_state.disclaimer)
+#### -- MAIN DISPLAY CODE -- ####
+#st.info(st.session_state.disclaimer)
 st.title('Perfect Compatibility Finder')
 
 ## User Input widgets ##
-st.date_input('Select your birthdate',
-                           value=st.session_state.bd,
-                           min_value=date(1900,1,1),
-                           max_value=date.today(),
-                           key='birth_date',
-                           format='YYYY-MM-DD')
+st.date_input(
+    label='Enter your birthdate',
+    help='Select year, then month, then day from calendar',
+    value=st.session_state.bd,
+    min_value=date(1900,1,1),
+    max_value=date.today(),
+    key='birth_date',
+    format='YYYY-MM-DD'
+)
+
+# Making sure birthdate is retained using seperate variable
 st.session_state.bd = st.session_state.birth_date
-st.number_input('How many years difference to display:',
-                         min_value=1,
-                         max_value=100,
-                         value=4,
-                         key='nyears')
+
+st.number_input(
+    'How many years age difference to display?',
+    help='The bigger the number the better matches you will find',
+    min_value=1,
+    max_value=100,
+    value=st.session_state.ny,
+    key='nyears'
+)
+# making sure session_state is really set
+st.session_state.ny = st.session_state.nyears
 
 ## Advanced expander section ##
 with st.expander('Advanced Options', on_change=set_advanced) as advanced_options:
